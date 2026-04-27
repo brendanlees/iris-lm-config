@@ -1,10 +1,10 @@
 # iris-lm-config
 
-custom qmk/vial firmware for the keebio iris lm (k1 pcb) — `vial_custom` keymap with per-layer cluster rgb indicators and a numpad layer.
+custom qmk/vial firmware for keebio iris lm (k1 pcb).
 
-this is a **qmk external userspace** repository. the firmware build toolchain (vial-qmk) lives separately and is upstream-clean — no fork modifications.
+set up as a **qmk external userspace** repository, so the firmware build toolchain (vial-qmk) lives separately and is upstream-clean — no fork modifications.
 
-for day-to-day workflow (commits, pushes, releases, vial gui capture, upstream pulls), see [`docs/workflow.md`](docs/workflow.md).
+for day-to-day workflow, see [`docs/workflow.md`](docs/workflow.md).
 
 ## layout
 
@@ -17,14 +17,12 @@ qmk.json                                        userspace build target manifest
 
 ## build
 
-one-time setup (already done on this machine):
-
 ```sh
 qmk config user.overlay_dir="$(realpath .)"
 qmk userspace-doctor   # should report "userspace enabled: true"
 ```
 
-compile:
+## compile:
 
 ```sh
 qmk compile -kb keebio/iris_lm/k1 -km vial_custom
@@ -32,7 +30,7 @@ qmk compile -kb keebio/iris_lm/k1 -km vial_custom
 qmk userspace-compile
 ```
 
-the `.bin` file lands in this repo's root. flash with qmk toolbox or `qmk flash`.
+the `.bin` file lands in this repo's root. flash with `qmk flash`.
 
 ## vial config
 
@@ -40,4 +38,4 @@ the `.bin` file lands in this repo's root. flash with qmk toolbox or `qmk flash`
 
 ## releases
 
-tag firmware releases on this repo (`firmware-vN`). the `.bin` is gitignored, so each release should be built from the tagged commit before flashing.
+tagged firmware releases (`firmware-vN`). the `.bin` is gitignored, so each release is built from the tagged commit before flashing.
