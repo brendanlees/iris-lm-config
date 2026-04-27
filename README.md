@@ -1,41 +1,43 @@
-# iris-lm-firmware
+# iris-lm-config
 
-Custom QMK/Vial firmware for the [Keebio Iris LM (k1 PCB)](https://keeb.io/products/iris-lm-keyboard) — `vial_custom` keymap with per-layer cluster RGB indicators, Tokyo Night palette, FN3 numpad layer, and tap-dance / homerow-mod ergonomics.
+custom qmk/vial firmware for the keebio iris lm (k1 pcb) — `vial_custom` keymap with per-layer cluster rgb indicators and a numpad layer.
 
-This is a **QMK External Userspace** repository. The firmware build toolchain (vial-qmk) lives separately at `~/Code/vial-qmk/` and is upstream-clean (no fork modifications).
+this is a **qmk external userspace** repository. the firmware build toolchain (vial-qmk) lives separately and is upstream-clean — no fork modifications.
 
-## Layout
+for day-to-day workflow (commits, pushes, releases, vial gui capture, upstream pulls), see [`docs/workflow.md`](docs/workflow.md).
+
+## layout
 
 ```
 keyboards/keebio/iris_lm/keymaps/vial_custom/   keymap source (keymap.c, config.h, rules.mk, vial.json, vial.vil)
 docs/                                           design notes + spec/plan history
-tools/gen_led_map.py                            LED position helper
+tools/gen_led_map.py                            led position helper
 qmk.json                                        userspace build target manifest
 ```
 
-## Build
+## build
 
-One-time setup (already done on this machine):
+one-time setup (already done on this machine):
 
 ```sh
-qmk config user.overlay_dir="$(realpath ~/Code/iris-lm-firmware)"
-qmk userspace-doctor   # should report "Userspace enabled: True"
+qmk config user.overlay_dir="$(realpath .)"
+qmk userspace-doctor   # should report "userspace enabled: true"
 ```
 
-Compile:
+compile:
 
 ```sh
 qmk compile -kb keebio/iris_lm/k1 -km vial_custom
-# OR build all targets in qmk.json:
+# or build all targets in qmk.json:
 qmk userspace-compile
 ```
 
-The `.bin` file lands in this repo's root. Flash with QMK Toolbox or `qmk flash`.
+the `.bin` file lands in this repo's root. flash with qmk toolbox or `qmk flash`.
 
-## Vial config
+## vial config
 
-`keymaps/vial_custom/vial.vil` is the keymap-as-data exported from Vial. It pairs with a firmware build that includes `vial.json` (compiled in via `rules.mk`).
+`keymaps/vial_custom/vial.vil` is the keymap-as-data exported from vial. it pairs with a firmware build that includes `vial.json` (compiled in via `rules.mk`).
 
-## Releases
+## releases
 
-Tag firmware releases on this repo (`firmware-vN`). The `.bin` is gitignored, so each release should be built from the tagged commit before flashing.
+tag firmware releases on this repo (`firmware-vN`). the `.bin` is gitignored, so each release should be built from the tagged commit before flashing.
