@@ -1,0 +1,13 @@
+# QMK build artifacts
+*.bin
+*.hex
+*.uf2
+*.elf
+.build/
+
+# macOS
+.DS_Store
+
+# Claude Code local state (skills are symlinks to ~/.agents/skills)
+.claude/skills/
+.claude/settings.local.json
