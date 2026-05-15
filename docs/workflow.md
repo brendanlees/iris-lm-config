@@ -9,7 +9,7 @@ day-to-day cycle for editing, building, flashing, and shipping firmware from thi
 | `iris-lm-config` (this one) | **your code** — keymap, docs, tools | every meaningful keymap change |
 | `vial-qmk` (sibling clone) | **build toolchain** — vial-kb's fork of qmk | never. just `git pull` periodically |
 
-two repos, two histories. the only link between them is `qmk config user.overlay_dir`, which persists across sessions in `~/.config/qmk/qmk.ini`.
+two repos, two histories. the only link between them is `qmk config user.overlay_dir`, which persists across sessions in qmk-cli's config file (see "qmk-cli config location" below).
 
 ## phase 1 — one-time github remote setup
 
@@ -63,14 +63,47 @@ qmk compile -kb keebio/iris_lm/k1 -km vial_custom
 gh release create firmware-v2 keebio_iris_lm_k1_vial_custom.bin --notes "fn3 numpad polish"
 ```
 
-## phase 4 — capturing vial gui changes into git
+## phase 4 — after a change (decision tree)
 
-when you remap layers inside the **vial gui app**, those changes write directly to the keyboard's flash — they don't touch disk. to capture that state into git:
+you changed something. which path?
 
-1. in vial gui: **file → save current layout** → save *over* `keyboards/keebio/iris_lm/keymaps/vial_custom/vial.vil`
-2. `git add ... && git commit -m "vial: rebind layer 2"` and push as usual
+**A) vial gui (any key remap)**
+1. vial: **file → save current layout** (default path is `~/.config/vial-qmk/keebio-iris-lm.vil`, a symlink → repo file; writes land in the repo automatically)
+2. claude code: invoke the `keyb:qmk-rgb` agent to sync rgb cluster arrays in `keymap.c`
+3. `qmk compile -kb keebio/iris_lm/k1 -km vial_custom`
+4. flash the `.bin`, test on the keyboard
+5. `git add keyboards/... && git commit && git push`
 
-until you save it, vial.vil drift on disk vs. on keyboard is invisible — easy to forget, worth a habit.
+**B) keymap.c only (no vial gui change)**
+1. `qmk compile -kb keebio/iris_lm/k1 -km vial_custom`
+2. flash, test, commit, push
+   (skip the agent — nothing in `keebio-iris-lm.vil` changed.)
+
+**C) both** — treat as A.
+
+mental model: *touched vial gui? run the agent. else: just compile.*
+
+note on drift: when you remap inside the vial gui app, changes write directly to the keyboard's flash — they don't touch disk until step 1. until you save it, `.vil` drift on disk vs. on keyboard is invisible. worth a habit.
+
+## keyb:qmk-rgb agent
+
+claude code agent that keeps the per-layer RGB cluster arrays in `keymap.c` in sync with `keebio-iris-lm.vil`. lives at `.claude/agents/keyb.qmk-rgb.md` in this repo (symlinked to `~/.claude/agents/` for global access).
+
+**when to invoke:** any time you change the keymap in vial gui (phase 4 path A or C above). skip it for pure `keymap.c` edits (path B).
+
+**how to invoke (claude code):**
+
+```
+> use the keyb:qmk-rgb agent
+```
+
+**what it does:** reads `keebio-iris-lm.vil`, classifies each keycode into a color cluster (numbers, symbols, arrows, modifiers, …), diffs against the current `fn*_clusters` PROGMEM arrays in `keymap.c`, asks you to classify anything ambiguous, then updates the arrays (via Serena) and compiles to verify.
+
+**what it does NOT do:** edit the keymap itself, flash the keyboard, or commit. those stay on you.
+
+**you'll be asked to decide:** any keycode not in its built-in classification rules (custom keycodes, app-shortcut combos like `LALT(KC_3)`, screenshot shortcuts like `SGUI(KC_4)`, etc.). pick a cluster from the table in the agent file and it'll remember for that run.
+
+**output:** per-layer diff of changed LED positions, list of ambiguous keycodes you classified, compile result. review, then commit if happy.
 
 ## phase 5 — pulling upstream vial-qmk updates
 
@@ -82,6 +115,30 @@ git pull --ff-only origin vial    # always fast-forwards now, no rebase pain
 ```
 
 then rebuild your firmware (`qmk compile ...`) to pick up upstream fixes. if a build breaks, that's an upstream regression — easy to diagnose because *your* code didn't change.
+
+## qmk-cli config location
+
+qmk-cli persists its settings (`user.qmk_home`, `user.overlay_dir`, etc.) to a platform-specific path. always use `qmk config <key>=<value>` to edit it — that way you don't need to remember the path. but if you ever need to inspect it directly:
+
+| platform | path |
+|---|---|
+| macOS | `~/Library/Application Support/qmk/qmk.ini` |
+| linux / xdg | `~/.config/qmk/qmk.ini` |
+| windows | `%APPDATA%\qmk\qmk.ini` |
+
+`qmk env` shows the active values (`QMK_HOME`, `QMK_FIRMWARE`, `QMK_USERSPACE`). `qmk userspace-doctor` should report `Userspace enabled: True`.
+
+required values for this repo:
+- `user.qmk_home` → path to your `vial-qmk` clone (e.g. `~/Code/vial-qmk`)
+- `user.overlay_dir` → path to this repo (e.g. `~/Code/iris-lm-config`)
+
+if you move either repo or set up a new machine, re-run:
+
+```sh
+qmk config user.qmk_home="$HOME/Code/vial-qmk" user.overlay_dir="$(realpath .)"   # from this repo's root
+```
+
+heads-up: an older or stale install may leave a second `qmk.ini` at the *other* path. qmk-cli only reads the platform-native one; the other becomes a misleading ghost. if `qmk config` and a `cat ~/.config/qmk/qmk.ini` disagree, that's the cause.
 
 ## archive of the old fork history
 

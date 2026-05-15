@@ -1,112 +1,61 @@
-# Iris LM - Vial Keymap
+# iris lm — vial_custom keymap
 
-Split ergonomic keyboard with custom RGB layer indication.
+split ergonomic keymap with cluster-based RGB layer indication.
 
-## Features
-- RGB highlights configured keys per layer
-- Layer colors: FN1=green, FN2=cyan, FN3=red
-- Toggle: `RGB_LYR` keycode
-- 100ms activation delay (prevents flash on quick taps)
+build / flash / vial workflow lives at the repo root: see [`../../../../../README.md`](../../../../../README.md) and [`../../../../../docs/workflow.md`](../../../../../docs/workflow.md).
 
-## Setup
-```bash
-# One-time config
-qmk config user.overlay_dir="$HOME/.config/keyboards/vial-qmk"
+## files
 
-# Install toolchain (if needed)
-brew install arm-none-eabi-gcc@8 arm-none-eabi-binutils
-```
+| file | role |
+|---|---|
+| `keymap.c` | layout, custom keycodes, RGB cluster definitions + indicator logic |
+| `config.h` | vial UID, tapping term, layer count, split layer state |
+| `rules.mk` | feature flags (`VIA_ENABLE`, `VIAL_ENABLE`, `VIALRGB_ENABLE`) |
+| `vial.json` | keyboard layout descriptor compiled into firmware for vial GUI |
+| `keebio-iris-lm.vil` | vial GUI export — keymap-as-data. canonical source of truth (see root README) |
 
-## Build & Flash
-```bash
-make compile  # Or: qmk compile -kb keebio/iris_lm/k1 -km vial
-make flash    # Or: qmk flash -kb keebio/iris_lm/k1 -km vial
-```
+## layers
 
-**Bootloader mode:** Press reset button OR hold both top corner keys while plugging in.
+7 layers defined in `enum custom_layer` (keymap.c):
 
-## Customization
+| layer | activation | purpose |
+|---|---|---|
+| `_MAIN` | base | qwerty |
+| `_FN1` | `LT(1, KC_SPACE)` (momentary) | nav / symbols |
+| `_FN2` | `LT(2, KC_SPACE)` (momentary) | numbers / fkeys |
+| `_FN3` | `LT(3, KC_ENTER)` (momentary) | numpad / media |
+| `_FN4` | `TG(4)` (toggle) | homerow-mods-off |
+| `_FN5`, `_FN6` | reserved | — |
 
-### Change Layer Colors
-Edit `rgb_layers.c`:
-```c
-switch (layer) {
-    case _FN1:
-        hue = 85;  // Change this (0-255)
-        break;
-    // ...
-}
-```
+## RGB indication model
 
-**Hue chart:** 0=red, 43=orange, 85=green, 128=cyan, 170=blue, 213=purple
+per-LED color is decided by **cluster classification**, not per-layer single hue.
 
-### Add New Layer
-1. Add to enum in `keymap.c`:
-```c
-enum custom_layer {
-    _MAIN, _FN1, _FN2, _FN3,
-    _FN4,  // NEW
-};
-```
+- each non-`_MAIN` layer has a `fn{n}_clusters[68]` PROGMEM array in `keymap.c`, mapping LED index → cluster type (numbers, symbols, arrows, modifiers, …)
+- `cluster_colors[]` in `keymap.c` defines the HSV color for each cluster type
+- `rgb_matrix_indicators_advanced_user` in `keymap.c` paints the active layer's array on top of the base animation
+- toggle: the `RGB_LYR` keycode (`QK_KB_0`)
 
-2. Add layer definition in `keymap.c`
+to keep the cluster arrays in sync with vial keymap changes, run the **`keyb:qmk-rgb` claude agent**. canonical definition lives in this repo at `.claude/agents/keyb.qmk-rgb.md`; `~/.claude/agents/keyb.qmk-rgb.md` is a symlink to it (so the agent is available globally and is versioned alongside the keymap). it parses `keebio-iris-lm.vil`, classifies each keycode, and updates the `fn*_clusters` arrays via Serena.
 
-3. Add color in `rgb_layers.c`:
-```c
-case _FN4:
-    hue = 170;  // Blue
-    break;
-```
+## customization quick-reference
 
-### Adjust Activation Delay
-Edit `config.h`:
-```c
-#define LAYER_LED_ACTIVATION_TIME 100  // Change milliseconds
-```
+| change | where |
+|---|---|
+| cluster colors | `cluster_colors[]` array in `keymap.c` (HSV triplets) |
+| keycode → cluster mapping | classification rules in `~/.claude/agents/keyb.qmk-rgb.md`, then re-run the agent |
+| add a new layer | extend `enum custom_layer`, add a `fn{n}_clusters` array, add a case in `get_layer_clusters`, bump `DYNAMIC_KEYMAP_LAYER_COUNT` in `config.h` if needed |
+| tapping term | `TAPPING_TERM` in `config.h` (currently 200) |
+| keymap itself | edit in vial GUI; save layout to `keebio-iris-lm.vil`; run the `keyb:qmk-rgb` agent |
 
-### Add RGB_LYR Toggle
-In Vial GUI: Any keycode → type `RGB_LYR`
+## troubleshooting
 
-## Make Guide
+- **RGB indicators only show on one half** — `SPLIT_LAYER_STATE_ENABLE` must be defined in `config.h` (it is).
+- **vial GUI doesn't recognize the keyboard** — confirm `VIA_ENABLE`/`VIAL_ENABLE` in `rules.mk`, and that the firmware was flashed (`.bin` from the most recent build).
+- **firmware too large** — disable RGB matrix effects via `#define`s in `config.h` (see [QMK RGB matrix docs](https://docs.qmk.fm/features/rgb_matrix#additional-configh-options)).
 
-| Command | Action |
-|---------|--------|
-| `make` | Show help |
-| `make compile` | Build firmware |
-| `make flash` | Build + flash |
-| `make clean` | Remove build files |
+## links
 
-Run from: `~/.config/keyboards/vial-qmk/`
-
-## Troubleshooting
-
-**"arm-none-eabi-gcc not found"**
-```bash
-export PATH="/opt/homebrew/opt/arm-none-eabi-gcc@8/bin:/opt/homebrew/opt/arm-none-eabi-binutils/bin:$PATH"
-```
-
-**"No such file or directory"**  
-Run from userspace root: `cd ~/.config/keyboards/vial-qmk`
-
-**"Firmware too large"**  
-Uncomment effect disables in `config.h`
-
-**LEDs don't change**  
-Hold layer >100ms. Check `LAYER_LED_ACTIVATION_TIME` in `config.h`.
-
-**Vial doesn't recognize**  
-Verify `vial.json` exists. Flash with `make flash`.
-
-## Files
-```
-config.h      - Configuration (RGB delay, effect disables)
-keymap.c      - Keymap + RGB_LYR keycode
-rgb_layers.c  - RGB layer indication logic
-rgb_layers.h  - RGB header
-rules.mk      - Build rules
-vial.json     - Vial layout
-```
-
-## Links
-- [QMK RGB Matrix](https://docs.qmk.fm/features/rgb_matrix)
-- [Vial Docs](https://get.vial.today/docs/)
+- [QMK RGB matrix](https://docs.qmk.fm/features/rgb_matrix)
+- [vial docs](https://get.vial.today/docs/)
+- root workflow: [`docs/workflow.md`](../../../../../docs/workflow.md)
