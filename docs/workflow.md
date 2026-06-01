@@ -81,7 +81,15 @@ you changed something. which path?
 
 **C) both** — treat as A.
 
-mental model: *touched vial gui? run the agent. else: just compile.*
+**D) vial qmk settings tab (tap-hold tuning — chordal hold, flow tap, tapping term, permissive hold, …)**
+1. tweak in vial → **QMK Settings** tab. change applies instantly via eeprom write over usb.
+2. vial: **file → save current layout** — persists the new values into `keebio-iris-lm.vil`'s `settings` block so the repo stays in sync with the keyboard.
+3. test on the keyboard.
+4. `git add keyboards/.../keebio-iris-lm.vil && git commit && git push`. *no compile, no flash, no agent.*
+
+   see [`docs/homerow-mods.md`](homerow-mods.md) for the canonical tap-hold values and the runtime-overrides-compile-time pitfall.
+
+mental model: *touched vial keymap? run the agent + compile. touched vial qmk settings? just save the layout. touched `keymap.c`? just compile.*
 
 note on drift: when you remap inside the vial gui app, changes write directly to the keyboard's flash — they don't touch disk until step 1. until you save it, `.vil` drift on disk vs. on keyboard is invisible. worth a habit.
 

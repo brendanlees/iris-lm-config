@@ -9,7 +9,7 @@ build / flash / vial workflow lives at the repo root: see [`../../../../../READM
 | file | role |
 |---|---|
 | `keymap.c` | layout, custom keycodes, RGB cluster definitions + indicator logic |
-| `config.h` | vial UID, tapping term, layer count, split layer state |
+| `config.h` | vial UID, layer count, split layer state, seed `TAPPING_TERM` (runtime value comes from vial qmk settings — see [`docs/homerow-mods.md`](../../../../../docs/homerow-mods.md)) |
 | `rules.mk` | feature flags (`VIA_ENABLE`, `VIAL_ENABLE`, `VIALRGB_ENABLE`) |
 | `vial.json` | keyboard layout descriptor compiled into firmware for vial GUI |
 | `keebio-iris-lm.vil` | vial GUI export — keymap-as-data. canonical source of truth (see root README) |
@@ -45,7 +45,7 @@ to keep the cluster arrays in sync with vial keymap changes, run the **`keyb:qmk
 | cluster colors | `cluster_colors[]` array in `keymap.c` (HSV triplets) |
 | keycode → cluster mapping | classification rules in `~/.claude/agents/keyb.qmk-rgb.md`, then re-run the agent |
 | add a new layer | extend `enum custom_layer`, add a `fn{n}_clusters` array, add a case in `get_layer_clusters`, bump `DYNAMIC_KEYMAP_LAYER_COUNT` in `config.h` if needed |
-| tapping term | `TAPPING_TERM` in `config.h` (currently 200) |
+| tapping term / hold flavor / chordal hold / flow tap | **vial → QMK Settings tab** (runtime, EEPROM-backed; saves into `.vil`'s `settings` block on file → save). full rationale in [`docs/homerow-mods.md`](../../../../../docs/homerow-mods.md). `config.h`'s `TAPPING_TERM` is only the seed for first boot. |
 | keymap itself | edit in vial GUI; save layout to `keebio-iris-lm.vil`; run the `keyb:qmk-rgb` agent |
 
 ## troubleshooting
