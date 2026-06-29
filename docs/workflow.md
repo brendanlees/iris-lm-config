@@ -70,13 +70,15 @@ you changed something. which path?
 **A) vial gui (any key remap)**
 1. vial: **file → save current layout** (default path is `~/.config/vial-qmk/keebio-iris-lm.vil`, a symlink → repo file; writes land in the repo automatically)
 2. claude code: invoke the `keyb:qmk-rgb` agent to sync rgb cluster arrays in `keymap.c`
-3. `qmk compile -kb keebio/iris_lm/k1 -km vial_custom`
-4. flash the `.bin`, test on the keyboard
-5. `git add keyboards/... && git commit && git push`
+3. `python3 tools/check_vil_keymap_sync.py` — fails if the `.vil` layout and compiled defaults drift
+4. `qmk compile -kb keebio/iris_lm/k1 -km vial_custom`
+5. flash the `.bin`, test on the keyboard
+6. `git add keyboards/... && git commit && git push`
 
 **B) keymap.c only (no vial gui change)**
-1. `qmk compile -kb keebio/iris_lm/k1 -km vial_custom`
-2. flash, test, commit, push
+1. `python3 tools/check_vil_keymap_sync.py` if you touched static `LAYOUT(...)` defaults
+2. `qmk compile -kb keebio/iris_lm/k1 -km vial_custom`
+3. flash, test, commit, push
    (skip the agent — nothing in `keebio-iris-lm.vil` changed.)
 
 **C) both** — treat as A.
@@ -89,7 +91,7 @@ you changed something. which path?
 
    see [`docs/homerow-mods.md`](homerow-mods.md) for the canonical tap-hold values and the runtime-overrides-compile-time pitfall.
 
-mental model: *touched vial keymap? run the agent + compile. touched vial qmk settings? just save the layout. touched `keymap.c`? just compile.*
+mental model: *touched vial keymap? save `.vil`, run the agent, run the sync check, then compile. touched vial qmk settings? just save the layout. touched `keymap.c` defaults? run the sync check, then compile.*
 
 note on drift: when you remap inside the vial gui app, changes write directly to the keyboard's flash — they don't touch disk until step 1. until you save it, `.vil` drift on disk vs. on keyboard is invisible. worth a habit.
 

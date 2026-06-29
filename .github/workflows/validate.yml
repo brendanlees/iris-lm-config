@@ -1,0 +1,23 @@
+name: Validate
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  syntax-and-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Validate JSON
+        run: |
+          python3 -m json.tool qmk.json >/dev/null
+          python3 -m json.tool keyboards/keebio/iris_lm/keymaps/vial_custom/vial.json >/dev/null
+          python3 -m json.tool keyboards/keebio/iris_lm/keymaps/vial_custom/keebio-iris-lm.vil >/dev/null
+      - name: Compile Python tools
+        run: python3 -m py_compile tools/*.py
+      - name: Check Vial/keymap sync
+        run: python3 tools/check_vil_keymap_sync.py

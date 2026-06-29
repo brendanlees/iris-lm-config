@@ -1,7 +1,7 @@
 // Copyright 2025 Keebio (@keebio)
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Per-layer RGB indication using static LED cluster tables
-// See docs/rgb-cluster-notes.md for LED index → matrix → key reference
+// See .claude/agents/keyb.qmk-rgb.md for the LED index → matrix → key reference
 
 #include QMK_KEYBOARD_H
 
@@ -72,7 +72,7 @@ static bool rgb_layer_indication_enabled = true;
 // ============================================================================
 // STATIC PER-LAYER LED CLUSTER TABLES
 // Each array is indexed by LED index (0-67) from keyboard.json rgb_matrix.layout.
-// See docs/rgb-cluster-notes.md for the full LED → matrix → key reference.
+// See .claude/agents/keyb.qmk-rgb.md for the full LED → matrix → key reference.
 // ============================================================================
 
 // Shorthand aliases for readability
@@ -115,7 +115,7 @@ static const uint8_t fn1_clusters[68] PROGMEM = {
  /* 23 [3,3] C+Spc  KC_KP_DOT   */ _CU,
  /* 24 underglow                */ _CN,
  /* 25 [3,2] X      SGUI(KC_C)  */ _CM,
- /* 26 [3,1] Z      KC_LCTRL    */ _CO,
+ /* 26 [3,1] Z      KC_LCTL    */ _CO,
  /* 27 underglow                */ _CN,
  /* 28 [3,0] S+Tab  RSFT(TAB)   */ _CK,
  /* 29 [4,5] thumb  KC_NO       */ _CB,
@@ -161,7 +161,7 @@ static const uint8_t fn1_clusters[68] PROGMEM = {
 
 // _FN2: Numpad, media controls, brightness
 static const uint8_t fn2_clusters[68] PROGMEM = {
- /* 0  [0,0] KC_TRNS     */ _CN,
+ /* 0  [0,0] RGB_LYR     */ _CK,
  /* 1  underglow         */ _CN,
  /* 2  [0,1] KC_TRNS     */ _CN,
  /* 3  [0,2] KC_TRNS     */ _CN,
@@ -277,7 +277,7 @@ static const uint8_t fn3_clusters[68] PROGMEM = {
  /* 39 [5,3] 8-key  KC_KP_ASTERISK   */ _CK,
  /* 40 [5,4] 7-key  KC_KP_SLASH      */ _CK,
  /* 41 underglow               */ _CN,
- /* 42 [5,5] 6-key  KC_NUMLOCK       */ _CK,
+ /* 42 [5,5] 6-key  KC_NUM_LOCK       */ _CK,
  /* 43 [6,0] Y      KC_KP_7   */ _CU,   // physical chain: outer→inner
  /* 44 [6,1] U      KC_KP_8   */ _CU,
  /* 45 [6,2] I      KC_KP_9   */ _CU,
@@ -357,7 +357,7 @@ static const uint8_t fn4_clusters[68] PROGMEM = {
  /* 47 [6,4] P      KC_TRNS     */ _CB,
  /* 48 [6,5] BSPC   KC_TRNS     */ _CB,
  /* 49 [7,5] '      KC_TRNS     */ _CB,   // physical: inner→outer
- /* 50 [7,4] ;      KC_SCOLON   */ _CB,
+ /* 50 [7,4] ;      KC_SCLN   */ _CB,
  /* 51 [7,3] L      KC_L        */ _CM,   // homerow
  /* 52 [7,2] K      KC_K        */ _CM,
  /* 53 [7,1] J      KC_J        */ _CM,
@@ -535,68 +535,69 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-    // Layer 0: _MAIN (Base layer from Vial config)
+    // Layer 0: _MAIN (Base layer from Vial export)
     [_MAIN] = LAYOUT(
-        KC_ESC, KC_1, KC_2, KC_3, KC_4, KC_5, KC_BSPC, KC_0, KC_9, KC_8, KC_7, KC_6,
-        TD(0), KC_Q, KC_W, KC_E, KC_R, KC_T, KC_BSPC, KC_P, KC_O, KC_I, KC_U, KC_Y,
-        LCTL_T(KC_ESCAPE), LGUI_T(KC_A), LALT_T(KC_S), LSFT_T(KC_D), LCTL_T(KC_F), KC_G, KC_QUOTE, LGUI_T(KC_SCLN), LALT_T(KC_L), RSFT_T(KC_K), RCTL_T(KC_J), KC_H,
-        OSM(MOD_LSFT), KC_Z, KC_X, KC_C, KC_V, KC_B, KC_NO, KC_NO, OSM(MOD_RSFT), KC_SLASH, KC_DOT, KC_COMMA, KC_M, KC_N,
+        TG(4), KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_0, KC_BSPC,
+        TD(1), KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_BSPC,
+        ALL_T(KC_ESCAPE), LGUI_T(KC_A), LALT_T(KC_S), LSFT_T(KC_D), LCTL_T(KC_F), KC_G, KC_H, RCTL_T(KC_J), RSFT_T(KC_K), LALT_T(KC_L), LGUI_T(KC_SCLN), KC_QUOTE,
+        OSM(MOD_LSFT), TD(13), TD(12), TD(10), TD(11), TD(14), KC_NO, KC_NO, KC_N, KC_M, KC_COMMA, KC_DOT, KC_SLASH, OSM(MOD_RSFT),
         LGUI_T(KC_BSPC), LT(1, KC_SPACE), LT(3, KC_ENTER), LT(3, KC_ENTER), LT(2, KC_SPACE), OSM(MOD_RSFT)
     ),
 
-    // Layer 1: _FN1 (Symbols & navigation from Vial config)
+    // Layer 1: _FN1 (Symbols & navigation from Vial export)
     [_FN1] = LAYOUT(
-        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-        LSFT(KC_GRAVE), LSFT(KC_1), LSFT(KC_2), LSFT(KC_3), LSFT(KC_4), LSFT(KC_5), KC_TRNS, LSFT(KC_0), LSFT(KC_9), LSFT(KC_8), LSFT(KC_7), LSFT(KC_6),
-        KC_TAB, OSM(MOD_LSFT|MOD_LGUI), LSFT(KC_9), LSFT(KC_0), LSFT(KC_LBRC), LSFT(KC_RBRC), KC_PGUP, KC_TRNS, KC_RIGHT, KC_UP, KC_DOWN, KC_LEFT,
-        RSFT(KC_TAB), KC_TRNS, KC_TRNS, SGUI(KC_SPACE), KC_LBRC, KC_RBRC, KC_NO, KC_NO, KC_PGDN, KC_EQUAL, LSFT(KC_EQUAL), KC_MINUS, LSFT(KC_BSLS), KC_BSLS,
+        KC_TRNS, KC_TRNS, SGUI(KC_2), SGUI(KC_3), KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+        LSFT(KC_GRAVE), LSFT(KC_1), LSFT(KC_2), LSFT(KC_3), LSFT(KC_4), LSFT(KC_5), LSFT(KC_6), LSFT(KC_7), LSFT(KC_8), LSFT(KC_9), LSFT(KC_0), KC_TRNS,
+        KC_TAB, OSM(MOD_LSFT|MOD_LGUI), LSFT(KC_9), LSFT(KC_0), LSFT(KC_LBRC), LSFT(KC_RBRC), KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT, KC_TRNS, KC_PGUP,
+        RSFT(KC_TAB), KC_LCTL, SGUI(KC_C), KC_KP_DOT, KC_LBRC, KC_RBRC, KC_TRNS, KC_TRNS, KC_BSLS, LSFT(KC_BSLS), KC_MINUS, LSFT(KC_EQUAL), KC_EQUAL, KC_PGDN,
         KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS
     ),
 
-    // Layer 2: _FN2 (Function keys & media from Vial config)
+    // Layer 2: _FN2 (Function keys, media & utilities from Vial export)
     [_FN2] = LAYOUT(
-        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, QK_BOOT, KC_TRNS, KC_TRNS, KC_TRNS, KC_KP_8, KC_TRNS, KC_TRNS,
-        KC_TRNS, KC_KP_1, KC_KP_2, KC_KP_3, KC_KP_4, KC_KP_5, KC_TRNS, KC_KP_0, KC_KP_9, KC_KP_8, KC_KP_7, KC_KP_6,
+        RGB_LYR, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_KP_8, KC_TRNS, KC_TRNS, KC_TRNS,
+        KC_TRNS, KC_KP_1, KC_KP_2, KC_KP_3, KC_KP_4, KC_KP_5, KC_KP_6, KC_KP_7, KC_KP_8, KC_KP_9, KC_KP_0, KC_TRNS,
         KC_TAB, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-        KC_TRNS, KC_TRNS, KC_BRID, KC_BRIU, KC_TRNS, KC_TRNS, KC_NO, KC_NO, KC_MFFD, KC_MRWD, KC_VOLU, KC_VOLD, KC_MUTE, KC_MPLY,
+        KC_TRNS, KC_TRNS, KC_BRID, KC_BRIU, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_MPLY, KC_MUTE, KC_VOLD, KC_VOLU, KC_MRWD, KC_MFFD,
         KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS
     ),
 
-    // Layer 3: _FN3 (App switcher & numpad from Vial config)
+    // Layer 3: _FN3 (App switcher & numpad from Vial export)
     [_FN3] = LAYOUT(
-        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_KP_MINUS, KC_KP_ASTERISK, KC_KP_SLASH, KC_NUM_LOCK,
-        KC_TRNS, LALT(KC_1), LALT(KC_2), LALT(KC_3), LALT(KC_4), LALT(KC_5), KC_TRNS, KC_TRNS, LSFT(KC_EQUAL), KC_KP_9, KC_KP_8, KC_KP_7,
-        LALT(KC_TAB), KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, LSFT(KC_EQUAL), KC_KP_6, KC_KP_5, KC_KP_4,
-        LCTL(KC_TAB), KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_NO, KC_NO, KC_TRNS, KC_TRNS, KC_ENTER, KC_KP_3, KC_KP_2, KC_KP_1,
-        KC_TRNS, KC_TRNS, KC_TRNS, KC_KP_DOT, KC_KP_0, KC_TRNS
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_NUM_LOCK, KC_KP_SLASH, KC_KP_ASTERISK, KC_KP_MINUS, KC_TRNS, KC_TRNS,
+        KC_TRNS, LALT(KC_1), LALT(KC_2), LALT(KC_3), LALT(KC_4), LALT(KC_5), KC_KP_7, KC_KP_8, KC_KP_9, LSFT(KC_EQUAL), KC_TRNS, KC_TRNS,
+        LALT(KC_TAB), LALT(KC_A), LSA(KC_A), KC_TRNS, KC_TRNS, KC_TRNS, KC_KP_4, KC_KP_5, KC_KP_6, LSFT(KC_EQUAL), KC_TRNS, KC_TRNS,
+        LCTL(KC_TAB), KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_KP_1, KC_KP_2, KC_KP_3, KC_ENTER, KC_TRNS, KC_TRNS,
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_KP_0, KC_KP_DOT
     ),
 
-    // Layer 4: _FN4 (Stub - all KC_TRNS)
+    // Layer 4: _FN4 (Homerow-mods-off from Vial export)
     [_FN4] = LAYOUT(
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        _______, _______, _______, _______, _______, _______
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+        KC_TRNS, KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_TRNS,
+        KC_TRNS, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS
     ),
 
-    // Layer 5: _FN5 (Stub - all KC_TRNS)
+    // Layer 5: _FN5 (Mouse keys from Vial export)
     [_FN5] = LAYOUT(
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        _______, _______, _______, _______, _______, _______
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, KC_TRNS, KC_WH_U,
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_WH_D,
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_BTN1, KC_BTN2, KC_TRNS
     ),
 
-    // Layer 6: _FN6 (Stub - all KC_TRNS)
+    // Layer 6: _FN6 (Reserved from Vial export)
     [_FN6] = LAYOUT(
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        _______, _______, _______, _______, _______, _______
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS
     ),
+
 };
 
 // ============================================================================
