@@ -107,7 +107,7 @@ This is the canonical mapping. Each row shows: which laptop key → what QMK Lay
 | lsft | R3,C0 | `RSFT(KC_TAB)` | `S-tab` | Quantum |
 | z | R3,C1 | `KC_LCTRL` | `lctl` | Quantum |
 | x | R3,C2 | `SGUI(KC_C)` | `M-S-c` | Quantum |
-| c | R3,C3 | `SGUI(KC_SPACE)` | `M-S-spc` | Quantum |
+| c | R3,C3 | `KC_KP_DOT` | `kp.` | Quantum |
 | v | R3,C4 | `KC_LBRACKET` ([) | `lbrc` | Bracket |
 | b | R3,C5 | `KC_RBRACKET` (]) | `rbrc` | Bracket |
 
@@ -373,6 +373,6 @@ When finished, report:
 - **README** -- summary of documentation changes
 - **Next step** -- remind user to deploy and restart:
   ```
-  chezmoi apply
+  chezmoi apply ~/.config/kanata/config.kbd
   sudo launchctl kickstart -k system/xbxd.kanata
   ```
