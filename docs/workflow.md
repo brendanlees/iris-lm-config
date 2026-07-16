@@ -69,8 +69,8 @@ you changed something. which path?
 
 **A) vial gui (any key remap)**
 1. vial: **file → save current layout** (default path is `~/.config/vial-qmk/keebio-iris-lm.vil`, a symlink → repo file; writes land in the repo automatically)
-2. claude: use the `keyb:qmk-rgb` agent / `keyb:vial-to-kanata` agent
-3. Pi: `/run keyb:qmk-rgb` / `/run keyb:vial-to-kanata`
+2. claude: use the `keyb:vial-to-kanata` agent / `keyb:qmk-rgb` agent
+3. Pi: `/run keyb:vial-to-kanata` / `/run keyb:qmk-rgb`
 4. `python3 tools/check_vil_keymap_sync.py` — fails if the `.vil` layout and compiled defaults drift
 5. `qmk compile -kb keebio/iris_lm/k1 -km vial_custom`
 6. flash the `.bin`, test on the keyboard

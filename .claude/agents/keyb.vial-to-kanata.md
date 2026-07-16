@@ -155,6 +155,8 @@ This is the canonical mapping. Each row shows: which laptop key → what QMK Lay
 | `KC_PGDOWN` / `KC_PGDN` | `pgdn` |
 | `KC_HOME` | `home` |
 | `KC_END` | `end` |
+| `KC_KP_DOT` | `kp.` |
+| `KC_KP_MINUS` | `kp-` |
 | `KC_MINUS` | `min` |
 | `KC_EQUAL` | `eql` |
 | `KC_LBRACKET` / `KC_LBRC` | `lbrc` |
