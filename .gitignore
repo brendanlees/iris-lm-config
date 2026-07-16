@@ -16,3 +16,6 @@ __pycache__/
 .claude/skills/
 .claude/settings.local.json
 /.serena
+
+# subagent workflow scratch
+.superpowers/
