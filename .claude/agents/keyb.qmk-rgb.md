@@ -171,9 +171,9 @@ For underglow: `/* LED_INDEX  underglow                */`
    LED 60 [8,4] /: _CM → _CS  (was KC_EQUAL → MEDIA, now LSFT(KC_EQUAL) → SYMBOLS)
    ```
 
-5. **Handle ambiguous.** Collect any keycodes that don't match a classification rule. Present them to the user with their LED index, physical key name, and the keycode. Ask for classification.
+5. **Handle ambiguous.** Collect any keycodes that don't match a classification rule. Present them to the user with their LED index, physical key name, and the keycode. Ask for classification. Keep the current cluster unchanged for any unmatched keycode until the user explicitly classifies it.
 
-6. **Confirm.** Present the complete diff. Wait for user confirmation before writing.
+6. **Confirm.** Present the complete diff. Wait for user confirmation before writing. Audit/sync runs may update automatic classifications only after the diff has been shown.
 
 7. **Update.** Use Serena `replace_symbol_body` to update each changed `fn*_clusters` array. Preserve the comment format exactly. If a new layer needs a clusters array, use `insert_after_symbol` to add it before `get_layer_clusters` and add the corresponding `case` to the switch.
 
