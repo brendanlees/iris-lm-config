@@ -47,7 +47,7 @@ to keep the cluster arrays in sync with vial keymap changes, run the **`keyb:qmk
 | keycode → cluster mapping | classification rules in `~/.claude/agents/keyb.qmk-rgb.md`, then re-run the agent |
 | add a new layer | extend `enum custom_layer`, add a `fn{n}_clusters` array, add a case in `get_layer_clusters`, bump `DYNAMIC_KEYMAP_LAYER_COUNT` in `config.h` if needed |
 | tapping term / hold flavor / chordal hold / flow tap | **vial → QMK Settings tab** (runtime, EEPROM-backed; saves into `.vil`'s `settings` block on file → save). full rationale in [`docs/homerow-mods.md`](../../../../../docs/homerow-mods.md). `config.h`'s `TAPPING_TERM` is only the seed for first boot. |
-| keymap itself | edit in vial GUI; save layout to `keebio-iris-lm.vil`; run the `keyb:vial-to-kanata` agent; run the `keyb:qmk-rgb` agent; run `python3 tools/check_vil_keymap_sync.py` from repo root; `qmk compile -kb keebio/iris_lm/k1 -km vial_custom` |
+| keymap itself | edit in vial GUI; save layout to `keebio-iris-lm.vil`; run the `keyb:vial-to-kanata` agent; deploy/restart kanata with `chezmoi apply ~/.config/kanata/config.kbd` + `sudo launchctl kickstart -k system/xbxd.kanata` if that source changed; run the `keyb:qmk-rgb` agent; run `python3 tools/check_vil_keymap_sync.py` from repo root; `qmk compile -kb keebio/iris_lm/k1 -km vial_custom` |
 
 ## troubleshooting
 

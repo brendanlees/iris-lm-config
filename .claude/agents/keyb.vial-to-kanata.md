@@ -253,12 +253,17 @@ Note: kanata `one-shot` cannot directly wrap `multi`. Use the `(multi (one-shot 
 
 ### defsrc Expansion Reference
 
-**Currently in defsrc:** `tab q w e caps a s d f h j k l ; x c spc f1 f2 f7 f8 f9 f10 f11 f12`
+**Currently in defsrc (47 keys):**
+- Number row: `2 3`
+- QWERTY row: `tab q w e r t y u i o p`
+- Home row: `caps a s d f g h j k l ; '\''`
+- Bottom row: `lsft z x c v b n m , . / rsft`
+- Thumb: `lmet spc`
+- Function / media keys: `f1 f2 f7 f8 f9 f10 f11 f12`
 
-**Keys needed for full QMK Layer 1 sync (not yet in defsrc):**
-- QWERTY row: `r t y u i o p`
-- Home row: `g '`
-- Bottom row: `lsft z v b n m , . / rsft`
+**Expansion status:** no expansion is presently required for the canonical layout.
+
+**General rule for future keys:** when new physical keys need layer behavior, expand `defsrc` and add a matching positional entry to every `deflayer`.
 
 **Special handling for shift keys:** When adding `lsft`/`rsft` to `defsrc`, their base layer entries MUST be `lsft`/`rsft` (not `_`), otherwise physical shift stops working. All other newly added keys can use `_` on the base layer.
 
@@ -283,7 +288,7 @@ PgUp at `'` position, PgDn at `rsft` position
 `-` at `,`, `+` at `.`, `=` at `/`
 
 **5. Quantum keys (bottom left row):**
-Shift+Tab at `lsft`, LCtrl at `z`, SGUI(C) at `x`, SGUI(Space) at `c`
+Shift+Tab at `lsft`, LCtrl at `z`, SGUI(C) at `x`, `KC_KP_DOT` at `c` (`kp.`)
 
 **6. Homerow mods & chords (drift detection):**
 Compare QMK base layer mod-tap assignments against Kanata `defalias` definitions.
@@ -291,6 +296,8 @@ Compare QMK `combo` array against Kanata `defchordsv2` entries.
 Only flag differences in KEY ASSIGNMENTS, never timing values.
 
 ## Workflow
+
+0. **Preflight guard.** If this run follows a fresh Vial edit, confirm the canonical `keebio-iris-lm.vil` is saved on disk before syncing. Use the tracked diff on the canonical file or explicit user confirmation that it was already saved/committed. If the user expected a new edit but there is no disk change, stop and tell them to Vial → File → Save Current Layout. For explicit audit/idempotence requests, report "no changes needed" instead of treating the missing diff as an error.
 
 1. **Read current state.** Use `Read` to load both files:
    - `/Users/brendan/Code/iris-lm-config/keyboards/keebio/iris_lm/keymaps/vial_custom/keebio-iris-lm.vil` -- parse as JSON, extract `layout[0]` (base), `layout[1]` (Layer 1), and `combo` array

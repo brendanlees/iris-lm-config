@@ -71,10 +71,12 @@ you changed something. which path?
 1. vial: **file → save current layout** (default path is `~/.config/vial-qmk/keebio-iris-lm.vil`, a symlink → repo file; writes land in the repo automatically)
 2. claude: use the `keyb:vial-to-kanata` agent / `keyb:qmk-rgb` agent
 3. Pi: `/run keyb:vial-to-kanata` / `/run keyb:qmk-rgb`
-4. `python3 tools/check_vil_keymap_sync.py` — fails if the `.vil` layout and compiled defaults drift
-5. `qmk compile -kb keebio/iris_lm/k1 -km vial_custom`
-6. flash the `.bin`, test on the keyboard
-7. `git add keyboards/... && git commit && git push`
+4. if the kanata source changed, deploy it with `chezmoi apply ~/.config/kanata/config.kbd` and restart `sudo launchctl kickstart -k system/xbxd.kanata`
+5. run the `keyb:qmk-rgb` agent
+6. `python3 tools/check_vil_keymap_sync.py` — fails if the `.vil` layout and compiled defaults drift
+7. `qmk compile -kb keebio/iris_lm/k1 -km vial_custom`
+8. flash the `.bin`, test on the keyboard
+9. `git add keyboards/... && git commit && git push`
 
 **B) keymap.c only (no vial gui change)**
 1. `python3 tools/check_vil_keymap_sync.py` if you touched static `LAYOUT(...)` defaults
@@ -92,7 +94,7 @@ you changed something. which path?
 
    see [`docs/homerow-mods.md`](homerow-mods.md) for the canonical tap-hold values and the runtime-overrides-compile-time pitfall.
 
-mental model: *touched vial keymap? save `.vil`, run Kanata sync, run RGB sync, run the sync check, then compile. touched vial qmk settings? just save the layout. touched `keymap.c` defaults? run the sync check, then compile.*
+mental model: *touched vial keymap? save `.vil`, run Kanata sync, deploy/restart kanata if that source changed, run RGB sync, run the sync check, then compile. touched vial qmk settings? just save the layout. touched `keymap.c` defaults? run the sync check, then compile.*
 
 note on drift: when you remap inside the vial gui app, changes write directly to the keyboard's flash — they don't touch disk until step 1. until you save it, `.vil` drift on disk vs. on keyboard is invisible. worth a habit.
 

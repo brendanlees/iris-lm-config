@@ -51,7 +51,7 @@ python3 tools/check_vil_keymap_sync.py
 
 `keymaps/vial_custom/keebio-iris-lm.vil` is the keymap-as-data exported from vial. it pairs with a firmware build that includes `vial.json` (compiled in via `rules.mk`).
 
-this file is the canonical source of truth. `~/.config/vial-qmk/keebio-iris-lm.vil` is a symlink to it, so vial gui's default save location writes through to the repo automatically. `keymap.c` contains firmware defaults generated/synced from the same layout; after saving vial, run the `keyb:vial-to-kanata` agent, then the `keyb:qmk-rgb` agent, then `python3 tools/check_vil_keymap_sync.py` to catch drift before flashing.
+this file is the canonical source of truth. `~/.config/vial-qmk/keebio-iris-lm.vil` is a symlink to it, so vial gui's default save location writes through to the repo automatically. `keymap.c` contains firmware defaults generated/synced from the same layout; after saving vial, run the `keyb:vial-to-kanata` agent, deploy/restart kanata with `chezmoi apply ~/.config/kanata/config.kbd` + `sudo launchctl kickstart -k system/xbxd.kanata` if that source changed, then run the `keyb:qmk-rgb` agent, then `python3 tools/check_vil_keymap_sync.py` to catch drift before flashing.
 
 current known-good vial qmk settings live in the `.vil` `settings` block:
 

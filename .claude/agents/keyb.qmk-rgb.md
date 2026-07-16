@@ -153,6 +153,8 @@ For underglow: `/* LED_INDEX  underglow                */`
 
 ## Workflow
 
+0. **Preflight guard.** If this run follows a fresh Vial edit, confirm the canonical `keebio-iris-lm.vil` is saved on disk before syncing RGB clusters. Use the tracked diff on the canonical file or explicit user confirmation that it was already saved/committed. If the user expected a new edit but there is no disk change, stop and tell them to Vial → File → Save Current Layout. For explicit audit/idempotence requests, report "no changes needed" instead of treating the missing diff as an error.
+
 1. **Read current state.** Use Serena `find_symbol` with `include_body=True` to read all `fn*_clusters` arrays and `get_layer_clusters` from `keymap.c`.
 
 2. **Read .vil file.** Read `keyboards/keebio/iris_lm/keymaps/vial_custom/keebio-iris-lm.vil` as JSON (canonical path; `~/.config/vial-qmk/keebio-iris-lm.vil` is a symlink to the same file). Parse `layout[layer_index]` for each layer that has a corresponding `fn*_clusters` array.
