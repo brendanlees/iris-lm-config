@@ -135,8 +135,8 @@ static const uint8_t fn1_clusters[68] PROGMEM = {
  /* 43 [6,0] Y      ^  LSFT(6)   */ _CS,  // physical chain: outer→inner
  /* 44 [6,1] U      &  LSFT(7)   */ _CS,
  /* 45 [6,2] I      *  LSFT(8)   */ _CS,
- /* 46 [6,3] O      (  LSFT(9)   */ _CS,
- /* 47 [6,4] P      )  LSFT(0)   */ _CS,
+ /* 46 [6,3] O      (  LSFT(9)   */ _CC,
+ /* 47 [6,4] P      )  LSFT(0)   */ _CC,
  /* 48 [6,5] BSPC   KC_TRNS      */ _CN,
  /* 49 [7,5] '      KC_PGUP      */ _CV,  // physical chain: inner→outer
  /* 50 [7,4] ;      KC_TRNS      */ _CN,
@@ -161,7 +161,7 @@ static const uint8_t fn1_clusters[68] PROGMEM = {
 
 // _FN2: Numpad, media controls, brightness
 static const uint8_t fn2_clusters[68] PROGMEM = {
- /* 0  [0,0] RGB_LYR     */ _CK,
+ /* 0  [0,0] KC_TRNS     */ _CN,
  /* 1  underglow         */ _CN,
  /* 2  [0,1] KC_TRNS     */ _CN,
  /* 3  [0,2] KC_TRNS     */ _CN,
@@ -184,9 +184,9 @@ static const uint8_t fn2_clusters[68] PROGMEM = {
  /* 20 [2,5] KC_TRNS     */ _CN,
  /* 21 [3,5] KC_TRNS     */ _CN,
  /* 22 [3,4] KC_TRNS     */ _CN,
- /* 23 [3,3] C      KC_BRIU     */ _CC,
+ /* 23 [3,3] C      KC_BRIU     */ _CM,
  /* 24 underglow                */ _CN,
- /* 25 [3,2] X      KC_BRID     */ _CC,
+ /* 25 [3,2] X      KC_BRID     */ _CM,
  /* 26 [3,1] KC_TRNS     */ _CN,
  /* 27 underglow         */ _CN,
  /* 28 [3,0] KC_TRNS     */ _CN,
@@ -198,9 +198,9 @@ static const uint8_t fn2_clusters[68] PROGMEM = {
  /* 34 [5,0] KC_TRNS     */ _CN,
  /* 35 underglow         */ _CN,
  /* 36 [5,1] KC_TRNS     */ _CN,
- /* 37 [5,2] 9      KC_TRNS     */ _CN,
+ /* 37 [5,2] 9      KC_TRNS     */ _CU,
  /* 38 underglow         */ _CN,
- /* 39 [5,3] 8      KC_KP_8     */ _CU,
+ /* 39 [5,3] 8      KC_KP_8     */ _CN,
  /* 40 [5,4] KC_TRNS     */ _CN,
  /* 41 underglow         */ _CN,
  /* 42 [5,5] KC_TRNS     */ _CN,
@@ -216,14 +216,14 @@ static const uint8_t fn2_clusters[68] PROGMEM = {
  /* 52 [7,2] K      KC_TRNS     */ _CN,
  /* 53 [7,1] J      KC_TRNS     */ _CN,
  /* 54 [7,0] H      KC_TRNS     */ _CN,
- /* 55 [8,0] N      KC_MPLY     */ _CA,   // physical chain: outer→inner
+ /* 55 [8,0] N      KC_MPLY     */ _CM,   // physical chain: outer→inner
  /* 56 [8,1] M      KC_MUTE     */ _CM,
- /* 57 [8,2] ,      KC_VOLD     */ _CS,
+ /* 57 [8,2] ,      KC_VOLD     */ _CM,
  /* 58 underglow                */ _CN,
- /* 59 [8,3] .      KC_VOLU     */ _CS,
- /* 60 [8,4] /      KC_MRWD     */ _CV,
+ /* 59 [8,3] .      KC_VOLU     */ _CM,
+ /* 60 [8,4] /      KC_MRWD     */ _CM,
  /* 61 underglow                */ _CN,
- /* 62 [8,5] RSht   KC_MFFD     */ _CV,
+ /* 62 [8,5] RSht   KC_MFFD     */ _CM,
  /* 63 [9,2] thumb              */ _CB,
  /* 64 [9,3] thumb              */ _CB,
  /* 65 underglow                */ _CN,
@@ -269,24 +269,24 @@ static const uint8_t fn3_clusters[68] PROGMEM = {
  /* 31 underglow               */ _CN,
  /* 32 [4,3] thumb KC_TRNS    */ _CB,
  /* 33 [4,2] thumb KC_TRNS    */ _CB,
- /* 34 [5,0] BSPC   KC_TRNS          */ _CN,   // physical chain: outer→inner
+ /* 34 [5,0] BSPC   KC_TRNS          */ _CK,   // physical chain: outer→inner
  /* 35 underglow               */ _CN,
- /* 36 [5,1] 0-key  KC_TRNS          */ _CN,
- /* 37 [5,2] 9-key  KC_KP_MINUS      */ _CK,
+ /* 36 [5,1] 0-key  KC_TRNS          */ _CU,
+ /* 37 [5,2] 9-key  KC_KP_MINUS      */ _CU,
  /* 38 underglow               */ _CN,
- /* 39 [5,3] 8-key  KC_KP_ASTERISK   */ _CK,
- /* 40 [5,4] 7-key  KC_KP_SLASH      */ _CK,
+ /* 39 [5,3] 8-key  KC_KP_ASTERISK   */ _CU,
+ /* 40 [5,4] 7-key  KC_KP_SLASH      */ _CN,
  /* 41 underglow               */ _CN,
- /* 42 [5,5] 6-key  KC_NUM_LOCK       */ _CK,
+ /* 42 [5,5] 6-key  KC_NUM_LOCK       */ _CN,
  /* 43 [6,0] Y      KC_KP_7   */ _CU,   // physical chain: outer→inner
  /* 44 [6,1] U      KC_KP_8   */ _CU,
  /* 45 [6,2] I      KC_KP_9   */ _CU,
- /* 46 [6,3] O      LSFT(KC_EQL) */ _CU,   // numpad +
+ /* 46 [6,3] O      LSFT(KC_EQL) */ _CS,   // numpad +
  /* 47 [6,4] P      KC_TRNS   */ _CN,
  /* 48 [6,5] BSPC   KC_TRNS   */ _CN,
  /* 49 [7,5] '      KC_TRNS   */ _CN,   // physical chain: inner→outer
  /* 50 [7,4] ;      KC_TRNS   */ _CN,
- /* 51 [7,3] L      LSFT(KC_EQL) */ _CU, // numpad +
+ /* 51 [7,3] L      LSFT(KC_EQL) */ _CS, // numpad +
  /* 52 [7,2] K      KC_KP_6   */ _CU,
  /* 53 [7,1] J      KC_KP_5   */ _CU,
  /* 54 [7,0] H      KC_KP_4   */ _CU,
@@ -307,7 +307,7 @@ static const uint8_t fn3_clusters[68] PROGMEM = {
 
 // _FN4: Homerow mods off (toggle). ESC + homerow A–L = red; all others show base animation.
 static const uint8_t fn4_clusters[68] PROGMEM = {
- /* 0  [0,0] ESC    TG(4)       */ _CM,   // layer-on indicator
+ /* 0  [0,0] ESC    TG(4)       */ _CB,   // layer-on indicator
  /* 1  underglow                */ _CN,
  /* 2  [0,1] 1      KC_TRNS     */ _CB,
  /* 3  [0,2] 2      KC_TRNS     */ _CB,
@@ -555,7 +555,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     // Layer 2: _FN2 (Function keys, media & utilities from Vial export)
     [_FN2] = LAYOUT(
-        RGB_LYR, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_KP_8, KC_TRNS, KC_TRNS, KC_TRNS,
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_KP_8, KC_TRNS, KC_TRNS, KC_TRNS,
         KC_TRNS, KC_KP_1, KC_KP_2, KC_KP_3, KC_KP_4, KC_KP_5, KC_KP_6, KC_KP_7, KC_KP_8, KC_KP_9, KC_KP_0, KC_TRNS,
         KC_TAB, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
         KC_TRNS, KC_TRNS, KC_BRID, KC_BRIU, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_MPLY, KC_MUTE, KC_VOLD, KC_VOLU, KC_MRWD, KC_MFFD,
