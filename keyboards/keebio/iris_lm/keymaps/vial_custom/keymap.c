@@ -1,7 +1,7 @@
 // Copyright 2025 Keebio (@keebio)
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Per-layer RGB indication using static LED cluster tables
-// See .claude/agents/keyb.qmk-rgb.md for the LED index → matrix → key reference
+// See docs/rgb-clusters.md for the LED index → matrix reference
 
 #include QMK_KEYBOARD_H
 
@@ -72,7 +72,7 @@ static bool rgb_layer_indication_enabled = true;
 // ============================================================================
 // STATIC PER-LAYER LED CLUSTER TABLES
 // Each array is indexed by LED index (0-67) from keyboard.json rgb_matrix.layout.
-// See .claude/agents/keyb.qmk-rgb.md for the full LED → matrix → key reference.
+// See docs/rgb-clusters.md for the full LED → matrix reference.
 // ============================================================================
 
 // Shorthand aliases for readability
@@ -198,9 +198,9 @@ static const uint8_t fn2_clusters[68] PROGMEM = {
  /* 34 [5,0] KC_TRNS     */ _CN,
  /* 35 underglow         */ _CN,
  /* 36 [5,1] KC_TRNS     */ _CN,
- /* 37 [5,2] 9      KC_TRNS     */ _CU,
+ /* 37 [5,2] 9      KC_TRNS     */ _CN,
  /* 38 underglow         */ _CN,
- /* 39 [5,3] 8      KC_KP_8     */ _CN,
+ /* 39 [5,3] 8      KC_KP_8     */ _CU,
  /* 40 [5,4] KC_TRNS     */ _CN,
  /* 41 underglow         */ _CN,
  /* 42 [5,5] KC_TRNS     */ _CN,
@@ -269,15 +269,15 @@ static const uint8_t fn3_clusters[68] PROGMEM = {
  /* 31 underglow               */ _CN,
  /* 32 [4,3] thumb KC_TRNS    */ _CB,
  /* 33 [4,2] thumb KC_TRNS    */ _CB,
- /* 34 [5,0] BSPC   KC_TRNS          */ _CK,   // physical chain: outer→inner
+ /* 34 [5,0] BSPC   KC_TRNS          */ _CN,   // physical chain: outer→inner
  /* 35 underglow               */ _CN,
- /* 36 [5,1] 0-key  KC_TRNS          */ _CU,
+ /* 36 [5,1] 0-key  KC_TRNS          */ _CN,
  /* 37 [5,2] 9-key  KC_KP_MINUS      */ _CU,
  /* 38 underglow               */ _CN,
  /* 39 [5,3] 8-key  KC_KP_ASTERISK   */ _CU,
- /* 40 [5,4] 7-key  KC_KP_SLASH      */ _CN,
+ /* 40 [5,4] 7-key  KC_KP_SLASH      */ _CU,
  /* 41 underglow               */ _CN,
- /* 42 [5,5] 6-key  KC_NUM_LOCK       */ _CN,
+ /* 42 [5,5] 6-key  KC_NUM_LOCK       */ _CB,
  /* 43 [6,0] Y      KC_KP_7   */ _CU,   // physical chain: outer→inner
  /* 44 [6,1] U      KC_KP_8   */ _CU,
  /* 45 [6,2] I      KC_KP_9   */ _CU,

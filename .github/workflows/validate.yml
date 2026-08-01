@@ -21,3 +21,5 @@ jobs:
         run: python3 -m py_compile tools/*.py
       - name: Check Vial/keymap sync
         run: python3 tools/check_vil_keymap_sync.py
+      - name: Check RGB cluster sync
+        run: python3 tools/check_rgb_cluster_sync.py
